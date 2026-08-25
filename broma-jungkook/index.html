@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>sonríe :)</title>
+<title>Sonríe :)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
   <section id="screen-intro" class="screen active">
     <div class="camera-frame">
       <img src="assets/jk_camara.jpg" alt="jungkook con cámara" class="photo-subject" id="jk-photo">
-      <p class="caption typing" id="intro-text">ESPERA, JUNGKOOK TE TOMARA UNA FOTO, SONRIE!</p>
+      <p class="caption typing" id="intro-text">ESPERA, JUNGKOOK TE TOMARA UNA FOTO, SONRIE! 😁</p>
     </div>
   </section>
 
@@ -53,63 +53,10 @@
     <div class="song-wrap">
       <div class="lyrics-panel" id="lyrics-panel">
         <h2 class="song-title">AMIGOS — DPOS</h2>
-        <!--
-          👉 PEGA AQUÍ LA LETRA DE LA CANCIÓN.
-          Reemplaza este párrafo de ejemplo por el texto real,
-          separando cada línea con un salto de línea o un <br>.
-        -->
-        <p class="lyrics-text" id="lyrics-text">
-          Y qué tal si dejo las luces prendidas esta noche
-Para recorrer con suavidad todo lo que me esconde
-Tu ropa
-Somos el encierro de un pequeño
-Aire que nos deja respirar
-Esperar de nuevo este juego
-Dime cuando se va a terminar
-Y qué tal dejo las luces prendidas esta noche
-Pare de correr tu manera de amar sexo y a golpes
-Sin ropa
-Somos el encierro de un pequeño
-Aire que nos deja respirar
-Esperar de nuevo este juego
-Dime cuando se va a terminar
-Yo solo quiero salir contigo de agarres o de amigos
-Quedate solo un rato te dire
-Soy tu payaso
-Será que por la noche seremos dinamita
-Estare esperando por el resto de estos días
-Se nos acabara el tiempo hasta que te decidas
-Somos tu y yo y solo tu y yo
-Es que no me entiendes
-Si te hubiera dicho las cosas hubiera sido diferente
-Es que no me entiendes
-Si te hubiera dicho las cosas hubieran sido diferentes
-Somos el encierro de un pequeño
-Aire que nos deja respirar
-Esperar de nuevo este juego
-Dime cuando se va a terminar
-Yo solo quiero salir contigo de agarres o de amigos
-Quedate solo un rato te dire
-Que en este mundo somos tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y yo
-Y tú y
-        </p>
+          <div class="lyrics-viewport">
+            <div id="lyrics-lines"></div>
+          </div>
+        
       </div>
       <div class="song-photo-wrap">
         <img src="assets/dpos.jpg" alt="mono sonriendo" class="song-photo">
@@ -118,7 +65,8 @@ Y tú y
     <audio id="song-audio" src="assets/Amig0s.mp3" preload="auto"></audio>
     <button id="btn-play-fallback" class="btn-play-fallback">▶ Reproducir canción</button>
   </section>
-
+  
+  <script src="lyrics-data.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

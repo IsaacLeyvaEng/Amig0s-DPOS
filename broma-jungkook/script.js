@@ -34,13 +34,10 @@ function showScreen(name) {
   screens[name].classList.add("active");
 }
 
-// ---------------------------------------------------------------
-// 1) Si venimos de la recarga con la bandera activa -> ir directo
-//    a la pantalla de la canción y reproducirla.
-// ---------------------------------------------------------------
 function boot() {
   if (localStorage.getItem(STORAGE_KEY) === "true") {
     localStorage.removeItem(STORAGE_KEY);
+    buildLyrics();
     showScreen("song");
     attemptAutoplay();
     return;
@@ -48,13 +45,8 @@ function boot() {
   runIntroSequence();
 }
 
-// ---------------------------------------------------------------
-// 2) Secuencia de intro: cámara -> flash -> revelado -> modal
-// ---------------------------------------------------------------
 function runIntroSequence() {
   showScreen("intro");
-
-  // Espera un momento con el mensaje "Espera, te tomaré una foto..."
   setTimeout(() => {
     fireFlash();
   }, 5000);
@@ -63,7 +55,6 @@ function runIntroSequence() {
 function fireFlash() {
   flashOverlay.classList.add("fire");
 
-  // A mitad del flash (pantalla completamente blanca) cambiamos de escena
   setTimeout(() => {
     showScreen("reveal");
   }, 700);
@@ -72,16 +63,12 @@ function fireFlash() {
     "animationend",
     () => {
       flashOverlay.classList.remove("fire");
-      // Tras mostrar el mono sonriendo un momento, abrimos el modal
       setTimeout(openModalChain, 3000);
     },
     { once: true }
   );
 }
 
-// ---------------------------------------------------------------
-// 3) Cadena de 3 preguntas en modal
-// ---------------------------------------------------------------
 function openModalChain() {
   questionIndex = 0;
   modalText.textContent = QUESTIONS[questionIndex];
@@ -93,7 +80,6 @@ btnSi.addEventListener("click", () => {
   if (questionIndex < QUESTIONS.length) {
     modalText.textContent = QUESTIONS[questionIndex];
   } else {
-    // Ya confirmó las 3 veces -> recargar y reproducir la canción
     modalOverlay.classList.remove("active");
     localStorage.setItem(STORAGE_KEY, "true");
     location.reload();
@@ -109,10 +95,6 @@ btnRetry.addEventListener("click", () => {
   openModalChain();
 });
 
-// ---------------------------------------------------------------
-// 4) Pantalla canción: intenta autoplay, si el navegador lo bloquea
-//    muestra un botón para reproducir manualmente.
-// ---------------------------------------------------------------
 function attemptAutoplay() {
   const playPromise = songAudio.play();
   if (playPromise !== undefined) {
@@ -125,6 +107,54 @@ function attemptAutoplay() {
 btnPlayFallback.addEventListener("click", () => {
   songAudio.play();
   btnPlayFallback.classList.remove("show");
+});
+
+// ---- Letra sincronizada ----
+const lyricsContainer = document.getElementById("lyrics-lines");
+let lyricEls = [];
+let activeLineIndex = -1;
+
+function buildLyrics() {
+  if (!lyricsContainer || typeof LYRICS === "undefined") return;
+  lyricsContainer.innerHTML = "";
+  lyricEls = LYRICS.map((entry) => {
+    const p = document.createElement("p");
+    p.className = "lyric-line";
+    p.textContent = entry.text;
+    lyricsContainer.appendChild(p);
+    return p;
+  });
+  activeLineIndex = -1;
+}
+
+function updateActiveLine(currentTime) {
+  if (typeof LYRICS === "undefined" || LYRICS.length === 0) return;
+  let newIndex = -1;
+  for (let i = 0; i < LYRICS.length; i++) {
+    if (currentTime >= LYRICS[i].time) newIndex = i;
+    else break;
+  }
+  if (newIndex !== activeLineIndex) {
+    if (activeLineIndex >= 0 && lyricEls[activeLineIndex]) {
+      lyricEls[activeLineIndex].classList.remove("active");
+      lyricEls[activeLineIndex].classList.add("sung");
+    }
+    if (newIndex >= 0 && lyricEls[newIndex]) {
+      lyricEls[newIndex].classList.add("active");
+      scrollLyricsTo(lyricEls[newIndex]);
+    }
+    activeLineIndex = newIndex;
+  }
+}
+
+function scrollLyricsTo(lineEl) {
+  const viewport = lyricsContainer.parentElement;
+  const targetY = viewport.clientHeight / 2 - (lineEl.offsetTop + lineEl.offsetHeight / 2);
+  lyricsContainer.style.transform = `translateY(${targetY}px)`;
+}
+
+songAudio.addEventListener("timeupdate", () => {
+  updateActiveLine(songAudio.currentTime);
 });
 
 // ---------------------------------------------------------------
